@@ -165,11 +165,9 @@ class DeleteOrder(APIView):
         order.delete()
         return Response("Order Deleted Successfully")
     
-
 # class RegisterCompany(APIView):
 #     authentication_classes = [TokenAuthentication,SessionAuthentication]
 #     permission_classes = [IsAuthenticated]
-    
 #     def post(self,request):
 #         data = request.data 
 #         request_info = get_user_company_from_request(request)

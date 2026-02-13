@@ -9,10 +9,14 @@ class DiningTable(BaseModel):
     seating_capacity = models.IntegerField()
     is_occupied = models.BooleanField(default=False)
     
+
 class Customer(BaseModel):
     name = models.CharField(max_length=100,null=True,blank=True)
     phone_number = models.CharField(max_length=100,null=True,blank=True)
     email = models.CharField(max_length=150,null=True,blank=True)
+    
+    # def __str__(self):
+    #     return self.name + "===="+str(self.phone_number)
     
 class Order(BaseModel):
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
