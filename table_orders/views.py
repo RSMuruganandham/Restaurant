@@ -281,6 +281,7 @@ class CreateUpdateOrder002(APIView):
         email_input = data.get('email')
         if Customer.objects.filter(email=email_input).exists():
             return Response('Email already exists')
+        
         else:
             customer = Customer.objects.create(
                 name = data.get('name'),
@@ -290,11 +291,10 @@ class CreateUpdateOrder002(APIView):
             table = DiningTable.objects.create(
                 table_number = data.get('table_number'),
                 seating_capacity = data.get('seating_capacity'),
-                is_occupied = data.get('is_occupied',False)
+                is_occupied = data.get('is_occupied')
             )
             order = Order.objects.create(
                 customer = customer,
                 table = table
             )
             return Response('Created New Email')
-              
