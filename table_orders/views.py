@@ -1,5 +1,5 @@
 
-from urllib import request, response
+from urllib import response
 from django.shortcuts import render
 
 from .models import DiningTable,Customer,Order
@@ -28,7 +28,7 @@ class GetCustomer(APIView):
         serializer = GetCustomerSerializer(customer,many=True)
         return Response(serializer.data)
     
-class GetOrder1(APIView):
+class GetOrder(APIView):
     def get(self,request):
         customer = request.query_params.get('customer')
         table = request.query_params.get('table_number')
@@ -60,10 +60,10 @@ class GetOrder(APIView):
     def post(self,request):
         customer = request.data.get('customer')
         table_number = request.data.get('table_number')
-        order_time = request.data.get('order_time')
+        # order_time = request.data.get('order_time')
         is_complete = request.data.get('is_complete')
         total_amount = request.data.get('total_amount')
-        order = Order.objects.filter(customer__name__icontains=customer)
+        order = Order.objects.filter(customer__name__icontains=customer,table__table_number=table_number,is_completed=is_complete,total_amount=total_amount)
         serializer = GetOrderSerializer(order,many=True)
         return Response(serializer.data)
 
@@ -165,136 +165,4 @@ class DeleteOrder(APIView):
         order.delete()
         return Response("Order Deleted Successfully")
     
-# class RegisterCompany(APIView):
-#     authentication_classes = [TokenAuthentication,SessionAuthentication]
-#     permission_classes = [IsAuthenticated]
-#     def post(self,request):
-#         data = request.data 
-#         request_info = get_user_company_from_request(request)
-#         user = get_user_from_request(request_info,data)
         
-        
-class CreateCustomer1(APIView):
-    permission_classes = []
-    authentication_classes = []
-    def post(self,request):
-        data = request.data 
-        customer = {}
-        customer['name'] = data['name']
-        customer['phone_number'] = data['phone_number']
-        customer['email'] = data['email']
-        customer=Customer.objects.create(**customer)
-        table = {}
-        table['table_number'] = data['table_number']
-        table['seating_capacity'] = data ['seating_capacity']
-        table['is_occupied'] = data ['is_occupied']
-        table = DiningTable.objects.create(**table)
-        order = {}
-        order['customer']= customer
-        order['table'] = table
-        order = Order.objects.create(**order)
-        return Response ('order created sucessfully')
-    
-class UpdateOrder1(APIView):
-    permission_classes = []
-    authentication_classes =[]
-   
-    def post(self, request):
-        data = request.data
-
-        order = Order.objects.get(id=data['id'])
-
-        customer = Customer.objects.get(id=order.customer.id)
-        customer.name = data.get('name')
-        customer.phone_number = data.get('phone_number')
-        customer.email = data.get('email')
-        customer.save()
-
-        table = DiningTable.objects.get(id=order.table.id)
-        table.table_number = data.get('table_number')
-        table.seating_capacity = data.get('seating_capacity')
-        table.is_occupied = data.get('is_occupied', False)
-        table.save()
-        return Response("Order Updated Successfully")
-    
-class CreateUpdateCustomer1(APIView):
-    permission_classes = []
-    authentication_classes = []
-    def post(self,request):
-        data = request.data 
-        customer = {}
-        customer['name'] = data ['name']
-        customer['phone_number'] = data ['phone_number']
-        customer['email'] = data['email']
-        customer = Customer.objects.create(**customer)
-        table = {}
-        table['table_number'] = data['table_number']
-        table['seating_capacity'] = data ['seating_capacity']
-        table['is_occupied'] = data ['is_occupied']
-        table = DiningTable.objects.create(**table)
-        order = {}
-        order['customer']= customer
-        order['table'] = table
-        order = Order.objects.create(**order)
-        return Response ('order created successfully')
-    
-# =================== Create Update Views =======================
-class CreateUpdateCustomer001(APIView):
-    perimission_classes = []
-    authentication_classes = []
-    def post(self,request):
-        data = request.data 
-        id = data.get('id')
-        if 'id' in data:
-            order = Order.objects.get(id=data['id'])
-            customer = order.customer
-            customer.name = data.get('name',customer.name)
-            customer.phone_number = data.get('phone_number',customer.phone_number)
-            customer.email = data.get('email',customer.email)
-            customer.save()
-            
-            table = order.table
-            table.table_number = data.get('table_number',table.table_number)
-            table.seating_capacity = data.get('seating_capacity',table.seating_capacity)
-            table.is_occupied = data.get('is_occupied',table.is_occupied)
-            table.save()
-            return Response('order Update successfully')
-        else:
-            customer = Customer.objects.create(
-                name = data.get('name'),
-                phone_number = data.get('phone_number'),
-                email = data.get('email')
-            )
-            table = DiningTable.objects.create(
-                table_number = data.get('table_number'),
-                seating_capacity = data.get('seating_capacity'),
-                is_occupied = data.get('is_occupied',False)
-            )
-            order = Order.objects.create(
-                customer = customer,table = table
-            )
-            return Response("order created successfully")
-        
-class CreateUpdateOrder002(APIView):
-    def post(self,request):
-        data = request.data 
-        email_input = data.get('email')
-        if Customer.objects.filter(email=email_input).exists():
-            return Response('Email already exists')
-        
-        else:
-            customer = Customer.objects.create(
-                name = data.get('name'),
-                phone_number = data.get('phone_number'),
-                email = email_input
-            )
-            table = DiningTable.objects.create(
-                table_number = data.get('table_number'),
-                seating_capacity = data.get('seating_capacity'),
-                is_occupied = data.get('is_occupied')
-            )
-            order = Order.objects.create(
-                customer = customer,
-                table = table
-            )
-            return Response('Created New Email')

@@ -155,5 +155,4 @@ class DeleteMenu(APIView):
         menu =Menu.objects.get(id=data['id'])
         menu.delete()
         return Response("Menu Deleted Successfully")
-
-            
+        
