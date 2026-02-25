@@ -291,7 +291,45 @@ class CreateUpdateOrder002(APIView):
             table = DiningTable.objects.create(
                 table_number = data.get('table_number'),
                 seating_capacity = data.get('seating_capacity'),
-                is_occupied = data.get('is_occupied')
+                is_occupied = data.get('is_occupied',False)
+            )
+            order = Order.objects.create(
+                customer = customer,
+                table = table
+            )
+            return Response('Created New Email')
+# =========================
+class CreateUpdateOrder003(APIView):
+    def post(self,request):
+        data = request.data 
+        email_input = data.get('email')
+        if Customer.objects.filter(email=email_input).exists():
+            customer = Customer.objects.get(email=email_input)
+            customer.name = data.get('name',customer.name)
+            customer.phone_number = data.get('phone_number',customer.phone_number)
+            customer.save()
+            
+            table = DiningTable.objects.create(
+                table_number = data.get('table_number'),
+                seating_capacity = data.get('seating_capacity'),
+                is_occupied = data.get('is_occupied',False)
+            )
+            order = Order.objects.create(
+                customer = customer,
+                table = table
+            )
+            return Response('Updated Existing Email')
+        
+        else:
+            customer = Customer.objects.create(
+                name = data.get('name'),
+                phone_number = data.get('phone_number'),
+                email = email_input
+            )
+            table = DiningTable.objects.create(
+                table_number = data.get('table_number'),
+                seating_capacity = data.get('seating_capacity'),
+                is_occupied = data.get('is_occupied',False)
             )
             order = Order.objects.create(
                 customer = customer,
