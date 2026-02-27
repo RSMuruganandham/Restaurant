@@ -240,7 +240,7 @@ class CreateUpdateCustomer1(APIView):
     
 # =================== Create Update Views =======================
 class CreateUpdateCustomer001(APIView):
-    perimission_classes = []
+    permission_classes = []
     authentication_classes = []
     def post(self,request):
         data = request.data 
@@ -271,7 +271,7 @@ class CreateUpdateCustomer001(APIView):
                 is_occupied = data.get('is_occupied',False)
             )
             order = Order.objects.create(
-                customer = customer,table = table
+                customer = customer,table = table,menu_items = data.get ('menu_items',[])
             )
             return Response("order created successfully")
         
@@ -308,7 +308,6 @@ class CreateUpdateOrder003(APIView):
             customer.name = data.get('name',customer.name)
             customer.phone_number = data.get('phone_number',customer.phone_number)
             customer.save()
-            
             table = DiningTable.objects.create(
                 table_number = data.get('table_number'),
                 seating_capacity = data.get('seating_capacity'),
@@ -363,4 +362,3 @@ class CreateUpdateOrder004(APIView):
                table = table
            )
            return Response('order created successfully')
-       

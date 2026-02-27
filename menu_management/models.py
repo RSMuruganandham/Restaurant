@@ -12,15 +12,19 @@ class MenuCategory(models.Model):
     name = models.CharField(max_length=100,null=True,blank=True)
     description = models.TextField(null=True,blank=True)
     is_active = models.BooleanField(default=True)
-
+    def __str__(self):
+        return self.name
 class MenuItem(models.Model):
     name = models.CharField(max_length=100,null=True,blank=True)
     price = models.IntegerField()
     description = models.TextField(null=True,blank=True)
     is_available = models.BooleanField(default=True)
     categories = models.ManyToManyField(MenuCategory)
-    
+    def __str__(self):
+        return self.name
 class Menu(models.Model):
     title = models.CharField(max_length=150)
     menu_items = models.ManyToManyField(MenuItem)
     is_active = models.BooleanField(default=True) 
+    def __str__(self):
+        return self.title

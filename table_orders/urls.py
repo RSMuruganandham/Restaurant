@@ -11,6 +11,8 @@ urlpatterns = [
     path('createDiningTable',views.CreateDiningTable.as_view(),name='createDiningTable'),
     path('updateDiningTable',views.UpdateDiningTable.as_view(),name='updateDiningTable'),
     path('updateCustomer',views.UpdateCustomer.as_view(),name='updateCustomer'),
-    path('updateOrder',views.UpdateOrder.as_view(),name='updateOrder')
+    path('updateOrder',views.UpdateOrder.as_view(),name='updateOrder'),
+    path('createUpdateCustomer001',views.CreateUpdateCustomer001.as_view(),name='createUpdateCustomer001'),
+    path('createUpdateOrder002',views.CreateUpdateOrder002.as_view(),name='createUpdateOrder002')
 ] 
 
